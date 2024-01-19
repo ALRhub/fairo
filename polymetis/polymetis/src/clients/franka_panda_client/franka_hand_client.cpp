@@ -18,7 +18,7 @@ FrankaHandClient::FrankaHandClient(std::shared_ptr<grpc::Channel> channel,
   // Connect to gripper
   std::string robot_ip = config["robot_ip"].as<std::string>();
   spdlog::info("Connecting to robot_ip {}", robot_ip);
-  gripper_.reset(new franka::Gripper(robot_ip));
+  gripper_.reset(new franka::GripperASynch(robot_ip));
 
   // Initialize gripper
   gripper_->homing();

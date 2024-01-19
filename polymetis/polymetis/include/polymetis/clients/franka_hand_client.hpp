@@ -28,7 +28,7 @@ private:
   bool prev_cmd_successful_ = true;
 
   // Franka
-  std::shared_ptr<franka::Gripper> gripper_;
+  std::shared_ptr<franka::GripperASynch> gripper_;
   bool is_moving_;
 
 public:

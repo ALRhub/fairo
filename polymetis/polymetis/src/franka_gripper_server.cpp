@@ -30,7 +30,7 @@ class GripperControllerImpl final : public GripperServer::Service {
 public:
   explicit GripperControllerImpl(std::string robot_ip) {
     spdlog::info("Connecting to robot_ip {}", robot_ip);
-    gripper_ = new franka::Gripper(robot_ip);
+    gripper_ = new franka::GripperASynch(robot_ip);
     gripper_state_ = new franka::GripperState;
     is_moving_ = false;
 
@@ -101,7 +101,7 @@ public:
   }
 
 private:
-  franka::Gripper *gripper_;
+  franka::GripperASynch *gripper_;
   franka::GripperState *gripper_state_;
   bool is_moving_;
 };
