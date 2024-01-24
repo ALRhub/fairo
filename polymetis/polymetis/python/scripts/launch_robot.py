@@ -42,7 +42,7 @@ def main(cfg):
     server_cmd = [server_exec_path]
     server_cmd = server_cmd + ["-s", ip, "-p", port]
 
-    if cfg.use_real_time:
+    if cfg.use_real_time and False:
         log.info(f"Acquiring sudo...")
         subprocess.run(["sudo", "echo", '"Acquired sudo."'], check=True)
 
@@ -53,7 +53,7 @@ def main(cfg):
     pgid = os.getpgid(server_output.pid)
 
     # Kill process at the end
-    if cfg.use_real_time:
+    if cfg.use_real_time and False:
 
         def cleanup():
             log.info(
