@@ -18,7 +18,7 @@ FrankaHandClient::FrankaHandClient(std::shared_ptr<grpc::Channel> channel,
   // Connect to gripper
   std::string robot_ip = config["robot_ip"].as<std::string>();
   spdlog::info("Connecting to robot_ip {}", robot_ip);
-  gripper_.reset(new franka::GripperASynch(robot_ip));
+  gripper_.reset(new franka::Gripper(robot_ip));
 
   // Initialize gripper
   gripper_->homing();
@@ -51,9 +51,11 @@ void FrankaHandClient::getGripperState(void) {
 }
 
 void FrankaHandClient::applyGripperCommand(void) {
-  is_moving_ = true;
-
-  if (gripper_cmd_.grasp()) {
+  if (gripper_cmd_.stop()) {
+    spdlog::info("Stopping");
+    prev_cmd_successful_ = gripper_->stop();
+  } else if (gripper_cmd_.grasp()) {
+    is_moving_ = true;
     spdlog::info("Grasping at width {} at speed={}", gripper_cmd_.width(),
                  gripper_cmd_.speed());
     double eps_inner = (gripper_cmd_.epsilon_inner() < 0)
@@ -67,6 +69,7 @@ void FrankaHandClient::applyGripperCommand(void) {
                         gripper_cmd_.force(), eps_inner, eps_outer);
 
   } else {
+    is_moving_ = true;
     spdlog::info("Moving to width {} at speed={}", gripper_cmd_.width(),
                  gripper_cmd_.speed());
     prev_cmd_successful_ =
